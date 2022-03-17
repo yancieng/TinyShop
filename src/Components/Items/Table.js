@@ -9,7 +9,7 @@ import {
   TableRow,
   TableBody,
 } from "@mui/material";
-import { deleteDoc, doc } from "firebase/firestore/lite";
+import { setDoc, deleteDoc, doc } from "firebase/firestore/lite";
 import { db } from "../../firebase";
 import { useSnackbar } from "notistack";
 
@@ -21,6 +21,19 @@ const ItemsTable = ({ fetch, itemList }) => {
       await deleteDoc(doc(db, "items", name));
       enqueueSnackbar("Successfully removed!", { variant: "success" });
       fetch();
+    } catch (error) {
+      enqueueSnackbar("Something went wrong", { variant: "error" });
+    }
+  };
+
+  const handleAddtoMat = async (item) => {
+    try {
+      await setDoc(doc(db, "materials", item.name), {
+        name: item.name,
+        buyPrice: item.buyPrice ? item.buyPrice : item.craftPrice,
+        sellPrice: item.sellPrice,
+      });
+      enqueueSnackbar("Successfully removed!", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
@@ -60,6 +73,10 @@ const ItemsTable = ({ fetch, itemList }) => {
                   )}
                 </TableCell>
                 <TableCell align="right">
+                  <Button variant="text" onClick={() => handleAddtoMat(row)}>
+                    Add to Material
+                  </Button>
+                  <br />
                   <Button variant="text" onClick={() => handleRemove(row.name)}>
                     Remove
                   </Button>
