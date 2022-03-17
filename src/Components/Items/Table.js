@@ -13,12 +13,12 @@ import { deleteDoc, doc } from "firebase/firestore/lite";
 import { db } from "../../firebase";
 import { useSnackbar } from "notistack";
 
-const MaterialsTable = ({ fetch, materialList }) => {
+const ItemsTable = ({ fetch, itemList }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleRemove = async (name) => {
     try {
-      await deleteDoc(doc(db, "materials", name));
+      await deleteDoc(doc(db, "items", name));
       enqueueSnackbar("Successfully removed!", { variant: "success" });
       fetch();
     } catch (error) {
@@ -28,7 +28,7 @@ const MaterialsTable = ({ fetch, materialList }) => {
 
   return (
     <Box sx={{ mt: "30px" }}>
-      All Materials:
+      All Items:
       <TableContainer sx={{ mt: "12px" }} component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -36,11 +36,13 @@ const MaterialsTable = ({ fetch, materialList }) => {
               <TableCell>Name</TableCell>
               <TableCell align="right">Sell Price</TableCell>
               <TableCell align="right">Buy Price</TableCell>
+              <TableCell align="right">Craft Price</TableCell>
+              <TableCell align="right">Profit</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {materialList.map((row) => (
+            {itemList.map((row) => (
               <TableRow
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -50,6 +52,13 @@ const MaterialsTable = ({ fetch, materialList }) => {
                 </TableCell>
                 <TableCell align="right">{row.sellPrice}</TableCell>
                 <TableCell align="right">{row.buyPrice}</TableCell>
+                <TableCell align="right">{row.craftPrice}</TableCell>
+                <TableCell align="right">
+                  {row.craftPrice && `Craft: ${row.sellPrice - row.craftPrice}`}
+                  {row.buyPrice && (
+                    <Box>{`Buy: ${row.sellPrice - row.buyPrice}`}</Box>
+                  )}
+                </TableCell>
                 <TableCell align="right">
                   <Button variant="text" onClick={() => handleRemove(row.name)}>
                     Remove
@@ -64,4 +73,4 @@ const MaterialsTable = ({ fetch, materialList }) => {
   );
 };
 
-export default MaterialsTable;
+export default ItemsTable;

@@ -4,15 +4,17 @@ import { setDoc, doc } from "firebase/firestore/lite";
 import { db } from "../../firebase";
 import { useSnackbar } from "notistack";
 
+const defaultValue = {
+  name: "",
+  sellAmount: 1,
+  sellPrice: 0,
+  buyPrice: 0,
+  buyAmount: 1,
+};
+
 const AddNew = ({ fetch }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [value, setValue] = useState({
-    name: "",
-    sellAmount: 1,
-    sellPrice: 0,
-    buyPrice: 0,
-    buyAmount: 1,
-  });
+  const [value, setValue] = useState(defaultValue);
 
   const handleChange = (e) => {
     if (!validate(e)) return;
@@ -39,6 +41,7 @@ const AddNew = ({ fetch }) => {
         sellPrice: value.sellPrice / value.sellAmount || 0,
       });
       fetch();
+      setValue(defaultValue);
       enqueueSnackbar("Successfully added!", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Something went wrong", { variant: "error" });

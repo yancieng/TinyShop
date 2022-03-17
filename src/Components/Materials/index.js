@@ -5,11 +5,11 @@ import { collection, getDocs } from "firebase/firestore/lite";
 import { db } from "../../firebase";
 
 const Materials = () => {
-  const [materialsList, setMaterialsList] = useState([]);
+  const [materialList, setMaterialList] = useState([]);
   const fetch = async () => {
     const materials = await getDocs(collection(db, "materials"));
-    const _materialsList = materials.docs.map((doc) => doc.data());
-    setMaterialsList(_materialsList);
+    const _materialList = materials.docs.map((doc) => doc.data());
+    setMaterialList(_materialList);
   };
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const Materials = () => {
   return (
     <>
       <AddNew fetch={fetch} />
-      <MaterialsTable materialsList={materialsList} fetch={fetch} />
+      <MaterialsTable materialList={materialList} fetch={fetch} />
     </>
   );
 };

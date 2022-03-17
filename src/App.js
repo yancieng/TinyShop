@@ -1,8 +1,6 @@
 import "./App.css";
 import * as React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import { Tabs, Button, Tab, Box } from "@mui/material";
 import { SnackbarProvider } from "notistack";
 
 import Items from "./Components/Items";
@@ -39,13 +37,25 @@ function App() {
     };
   };
 
+  const notistackRef = React.createRef();
+  const onClickDismiss = (key) => () => {
+    notistackRef.current.closeSnackbar(key);
+  };
+
   return (
     <SnackbarProvider
       anchorOrigin={{
         vertical: "bottom",
         horizontal: "center",
       }}
+      maxSnack={1}
       autoHideDuration={2000}
+      ref={notistackRef}
+      action={(key) => (
+        <Button sx={{ color: "#fff" }} onClick={onClickDismiss(key)}>
+          X
+        </Button>
+      )}
     >
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
@@ -53,9 +63,9 @@ function App() {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab label="Items" {...a11yProps(0)} />
+          <Tab label="Materials" {...a11yProps(1)} />
+          <Tab label="Rankings" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
