@@ -21,6 +21,7 @@ const defaultValue = {
   buyPrice: 0,
   buyAmount: 1,
   craft: [{ name: "", amount: 1 }],
+  craftAmount: 1,
 };
 
 const AddNew = ({ fetch }) => {
@@ -49,7 +50,7 @@ const AddNew = ({ fetch }) => {
   const handleChangeCraft = (e, index) => {
     if (!validate(e)) return;
 
-    const _value = { ...value };
+    const _value = JSON.parse(JSON.stringify(value));
     _value.craft[index][e.target.name] = e.target.value;
     setValue(_value);
   };
@@ -87,7 +88,7 @@ const AddNew = ({ fetch }) => {
         }
       });
     }
-    return totalCost;
+    return totalCost / value.craftAmount;
   };
 
   const handleSubmit = async () => {
@@ -104,6 +105,7 @@ const AddNew = ({ fetch }) => {
 
       await setDoc(doc(db, "items", _value.name), _value);
       fetch();
+      console.log(defaultValue);
       setValue(defaultValue);
       enqueueSnackbar(
         `Success. Profit - ${
@@ -139,7 +141,7 @@ const AddNew = ({ fetch }) => {
       <Alert variant="outlined" severity="info" sx={{ mb: "12px" }}>
         <AlertTitle>Sell</AlertTitle>
         <TextField
-          sx={{ mr: "12px" }}
+          sx={{ mr: "12px", mb: "12px" }}
           onChange={handleChange}
           label="Amount"
           name="sellAmount"
@@ -147,19 +149,19 @@ const AddNew = ({ fetch }) => {
           variant="outlined"
         />
         <TextField
+          sx={{ mb: "12px" }}
           onChange={handleChange}
           label="Price"
           name="sellPrice"
           value={value.sellPrice}
           variant="outlined"
         />
-        <br />
         <br />= {value.sellPrice / value.sellAmount} Each
       </Alert>
       <Alert variant="outlined" severity="info" sx={{ mb: "12px" }}>
         <AlertTitle>Buy</AlertTitle>
         <TextField
-          sx={{ mr: "12px" }}
+          sx={{ mr: "12px", mb: "12px" }}
           onChange={handleChange}
           label="Amount"
           name="buyAmount"
@@ -167,22 +169,30 @@ const AddNew = ({ fetch }) => {
           variant="outlined"
         />
         <TextField
+          sx={{ mb: "12px" }}
           onChange={handleChange}
           label="Price"
           name="buyPrice"
           value={value.buyPrice}
           variant="outlined"
         />
-        <br />
         <br />= {value.buyPrice / value.buyAmount} Each
       </Alert>
 
       <Alert variant="outlined" severity="info" sx={{ mb: "12px" }}>
         <AlertTitle>Crafting</AlertTitle>
+        <TextField
+          sx={{ mb: "12px" }}
+          onChange={handleChange}
+          label="Amount"
+          name="craftAmount"
+          value={value.craftAmount}
+          variant="outlined"
+        />
         {value.craft.map((row, index) => {
           return (
             <Box key={index} sx={{ mb: "12px" }}>
-              <FormControl sx={{ width: "200px", mr: "12px" }}>
+              <FormControl sx={{ width: "200px", mr: "12px", mb: "12px" }}>
                 <InputLabel id={`select-label-${index}`}>Name</InputLabel>
                 <Select
                   labelId={`select-label-${index}`}
@@ -191,6 +201,7 @@ const AddNew = ({ fetch }) => {
                   name="name"
                   onChange={(e) => handleChangeCraft(e, index)}
                 >
+                  <MenuItem value=""></MenuItem>
                   {materialsList.map((materials, i) => (
                     <MenuItem key={i} value={materials.name}>
                       {materials.name}
@@ -199,7 +210,7 @@ const AddNew = ({ fetch }) => {
                 </Select>
               </FormControl>
               <TextField
-                sx={{ mr: "12px" }}
+                sx={{ mr: "12px", mb: "12px" }}
                 onChange={(e) => handleChangeCraft(e, index)}
                 label="Amount"
                 name="amount"

@@ -62,7 +62,7 @@ const AddNew = ({ fetch }) => {
       <Alert variant="outlined" severity="info" sx={{ mb: "12px" }}>
         <AlertTitle>Buy</AlertTitle>
         <TextField
-          sx={{ mr: "12px" }}
+          sx={{ mr: "12px", mb: "12px" }}
           onChange={handleChange}
           label="Amount"
           name="buyAmount"
@@ -70,19 +70,19 @@ const AddNew = ({ fetch }) => {
           variant="outlined"
         />
         <TextField
+          sx={{ mb: "12px" }}
           onChange={handleChange}
           label="Price"
           name="buyPrice"
           value={value.buyPrice}
           variant="outlined"
         />
-        <br />
-        <br />= {value.buyPrice / value.buyAmount} Each
+        <br /> = {value.buyPrice / value.buyAmount} Each
       </Alert>
       <Alert variant="outlined" severity="info">
         <AlertTitle>Sell</AlertTitle>
         <TextField
-          sx={{ mr: "12px" }}
+          sx={{ mr: "12px", mb: "12px" }}
           onChange={handleChange}
           label="Amount"
           name="sellAmount"
@@ -90,13 +90,13 @@ const AddNew = ({ fetch }) => {
           variant="outlined"
         />
         <TextField
+          sx={{ mb: "12px" }}
           onChange={handleChange}
           label="Price"
           name="sellPrice"
           value={value.sellPrice}
           variant="outlined"
         />
-        <br />
         <br />= {value.sellPrice / value.sellAmount} Each
       </Alert>
       <Button
