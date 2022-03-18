@@ -6,6 +6,7 @@ import { db } from "../../firebase";
 
 const Items = () => {
   const [itemList, setItemList] = useState([]);
+  const [materialsList, setMaterialsList] = useState([]);
 
   const fetch = async () => {
     const Items = await getDocs(collection(db, "items"));
@@ -13,14 +14,25 @@ const Items = () => {
     setItemList(_ItemList);
   };
 
+  const fetchMaterials = async () => {
+    const materials = await getDocs(collection(db, "materials"));
+    const _materialsList = materials.docs.map((doc) => doc.data());
+    setMaterialsList(_materialsList);
+  };
+
   useEffect(() => {
     fetch();
+    fetchMaterials();
   }, []);
 
   return (
     <>
-      <AddNew fetch={fetch} />
-      <ItemsTable itemList={itemList} fetch={fetch} />
+      <AddNew fetch={fetch} materialsList={materialsList} />
+      <ItemsTable
+        itemList={itemList}
+        fetch={fetch}
+        fetchMaterials={fetchMaterials}
+      />
     </>
   );
 };

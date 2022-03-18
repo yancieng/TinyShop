@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { collection, getDocs, setDoc, doc } from "firebase/firestore/lite";
+import { setDoc, doc } from "firebase/firestore/lite";
 import { db } from "../../firebase";
 import { useSnackbar } from "notistack";
 
@@ -24,20 +24,9 @@ const defaultValue = {
   craftAmount: 1,
 };
 
-const AddNew = ({ fetch }) => {
+const AddNew = ({ fetch, materialsList }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const [materialsList, setMaterialsList] = useState([]);
   const [value, setValue] = useState(defaultValue);
-
-  useEffect(() => {
-    const fetchMaterials = async () => {
-      const materials = await getDocs(collection(db, "materials"));
-      const _materialsList = materials.docs.map((doc) => doc.data());
-      setMaterialsList(_materialsList);
-    };
-
-    fetchMaterials();
-  }, []);
 
   const handleChange = (e) => {
     if (!validate(e)) return;
@@ -88,7 +77,7 @@ const AddNew = ({ fetch }) => {
         }
       });
     }
-    return totalCost / value.craftAmount;
+    return parseInt(totalCost / value.craftAmount);
   };
 
   const handleSubmit = async () => {

@@ -13,7 +13,7 @@ import { setDoc, deleteDoc, doc } from "firebase/firestore/lite";
 import { db } from "../../firebase";
 import { useSnackbar } from "notistack";
 
-const ItemsTable = ({ fetch, itemList }) => {
+const ItemsTable = ({ fetch, itemList, fetchMaterials }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleRemove = async (name) => {
@@ -33,7 +33,8 @@ const ItemsTable = ({ fetch, itemList }) => {
         buyPrice: item.buyPrice ? item.buyPrice : item.craftPrice,
         sellPrice: item.sellPrice,
       });
-      enqueueSnackbar("Successfully removed!", { variant: "success" });
+      fetchMaterials();
+      enqueueSnackbar("Successfully added", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
@@ -67,12 +68,15 @@ const ItemsTable = ({ fetch, itemList }) => {
                 <TableCell align="right">{row.buyPrice}</TableCell>
                 <TableCell align="right">{row.craftPrice}</TableCell>
                 <TableCell align="right">
-                  {row.craftPrice && `Craft: ${row.sellPrice - row.craftPrice}`}
+                  {row.craftPrice &&
+                    `Craft: ${parseInt(row.sellPrice - row.craftPrice)}`}
                   {row.buyPrice && (
-                    <Box>{`Buy: ${row.sellPrice - row.buyPrice}`}</Box>
+                    <Box>{`Buy: ${parseInt(
+                      row.sellPrice - row.buyPrice
+                    )}`}</Box>
                   )}
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="right" sx={{ minWidth: "150px" }}>
                   <Button variant="text" onClick={() => handleAddtoMat(row)}>
                     Add to Material
                   </Button>
